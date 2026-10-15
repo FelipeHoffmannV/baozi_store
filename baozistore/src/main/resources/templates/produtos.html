@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Baozi Store - Produtos</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <style>
+    .bg-amber { background-color: #f59e0b; color: white; }
+    .btn-amber { background-color: #f59e0b; color: white; }
+    .btn-amber:hover { background-color: #d97706; color: white; }
+    .text-amber { color: #d97706; }
+  </style>
+</head>
+<body class="bg-light text-secondary d-flex flex-column min-vh-100">
+
+
+<header class="bg-amber py-3 shadow-sm mb-5">
+  <div class="container d-flex justify-content-between align-items-center">
+    <a href="/" class="text-white text-decoration-none"><h1 class="h3 mb-0 fw-bold">🥟 Baozi Store</h1></a>
+    <span class="badge bg-dark text-white rounded-pill px-3 py-2 shadow-sm">Produtos</span>
+  </div>
+</header>
+
+
+<main class="container mb-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="text-dark fw-bold mb-0">📦 Gerenciamento de Produtos</h2>
+    <a href="/" class="btn btn-outline-secondary btn-sm">Voltar ao Início</a>
+  </div>
+
+  <div class="row g-4">
+
+    <div class="col-12 col-lg-4">
+      <div class="card shadow-sm border-0 p-3">
+        <div class="card-body">
+          <h3 class="h5 text-dark fw-bold mb-3">Novo Produto (Baozi)</h3>
+          <form th:action="@{/produtos}" th:object="${produto}" method="POST">
+            <div class="mb-3">
+              <label for="nome" class="form-label small fw-medium text-dark">Sabor / Descrição</label>
+              <input type="text" id="nome" th:field="*{nome}" class="form-control form-control-sm" required placeholder="Ex: Carne de Porco com Nirá">
+            </div>
+            <div class="mb-3">
+              <label for="preco" class="form-label small fw-medium text-dark">Preço Unitário (R$)</label>
+              <input type="number" step="0.01" min="0" id="preco" th:field="*{preco}" class="form-control form-control-sm" required placeholder="Ex: 8.50">
+            </div>
+            <div class="mb-3">
+              <label for="estoque" class="form-label small fw-medium text-dark">Estoque (Sim/Não)</label>
+              <select th:field="*{estoque}" id="estoque">
+                <option value="true">Sim</option>
+                <option value="false">Não</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-amber btn-sm w-100 py-2 fw-medium">Salvar Produto</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="col-12 col-lg-8">
+      <div class="card shadow-sm border-0 p-3">
+        <div class="card-body">
+          <h3 class="h5 text-dark fw-bold mb-3">Cardápio de Produtos</h3>
+          <div class="table-responsive">
+            <table class="table table-hover align-middle">
+              <thead class="table-light text-dark">
+              <tr>
+                <th scope="col" style="width: 15%;">ID</th>
+                <th scope="col">Sabor / Nome</th>
+                <th scope="col" style="width: 25%;">Preço</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr th:each="p : ${produtos}">
+                <td class="fw-bold text-dark" th:text="${p.id}">1</td>
+                <td th:text="${p.nome}"></td>
+                <td class="text-dark fw-medium" th:text="'R$ ' + ${#numbers.formatDecimal(p.preco, 1, 2, 'COMMA')}"></td>
+                <td class="text-center">
+                  <form th:action="'/produtos/excluir/' + ${p.id}" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir este produto?');">
+                    <button type="submit" class="btn btn-outline-danger btn-sm px-3 py-1">
+                      🗑️ Excluir
+                    </button>
+                  </form>
+                </td>
+              </tr>
+              <tr th:if="${#lists.isEmpty(produtos)}">
+                <td colspan="3" class="text-center text-muted py-4 small">Nenhum produto cadastrado no menu.</td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+
+<footer class="bg-white border-top py-3 text-center mt-auto">
+  <p class="mb-0 text-muted small">&copy; 2026 Baozi Store - Painel de Controle Interno.</p>
+</footer>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</body>
+</html>
